@@ -2,10 +2,8 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for cloak-swift.
 GH_REPO="https://github.com/lordcodes/cloak-swift"
-TOOL_NAME="cloak-swift"
-TOOL_TEST="cloakswift version"
+TOOL_NAME="cloakswift"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -14,7 +12,6 @@ fail() {
 
 curl_opts=(-fsSL)
 
-# NOTE: You might want to remove this if cloak-swift is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
 	curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -27,12 +24,10 @@ sort_versions() {
 list_github_tags() {
 	git ls-remote --tags --refs "$GH_REPO" |
 		grep -o 'refs/tags/.*' | cut -d/ -f3- |
-		sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+		sed 's/^v//'
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if cloak-swift has other means of determining installable versions.
 	list_github_tags
 }
 
@@ -41,8 +36,7 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for cloak-swift
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	url="$GH_REPO/releases/download/v${version}/cloakswift-v${version}.zip"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -59,12 +53,13 @@ install_version() {
 
 	(
 		mkdir -p "$install_path"
-		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+		cp -r "$ASDF_DOWNLOAD_PATH/$TOOL_NAME" "$install_path"
 
-		# TODO: Assert cloak-swift executable exists.
 		local tool_cmd
-		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
-		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
+		tool_cmd="$install_path/$TOOL_NAME"
+		chmod +x "$tool_cmd"
+		xattr -dr com.apple.quarantine "$tool_cmd"
+		test -x "$tool_cmd" || fail "Expected $tool_cmd to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (

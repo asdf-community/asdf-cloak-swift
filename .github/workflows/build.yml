@@ -12,7 +12,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-latest
+          # Currently only compatible with Mac 
+          # - ubuntu-latest
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
