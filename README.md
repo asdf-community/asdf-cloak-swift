@@ -15,10 +15,7 @@
 
 # Dependencies
 
-**TODO: adapt this section**
-
-- `bash`, `curl`, `tar`, and [POSIX utilities](https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html).
-- `SOME_ENV_VAR`: set this environment variable in your shell config to load the correct version of tool x.
+- `bash`, `curl`, `unzip`, and [POSIX utilities](https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html).
 
 # Install
 
@@ -43,11 +40,11 @@ asdf install cloak-swift latest
 asdf global cloak-swift latest
 
 # Now cloak-swift commands are available
+cloakswift generate
 cloakswift version
 ```
 
-Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
-install & manage versions.
+Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to install & manage versions.
 
 # Contributing
 
